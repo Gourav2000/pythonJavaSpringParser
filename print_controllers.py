@@ -52,12 +52,10 @@ def extract_zip(zip_file_path):
         zip_file.extractall(temp_dir)
         # List the files in the temporary directory
         files_in_temp_dir = os.listdir(temp_dir)
-        print(f'Files in temporary directory: {files_in_temp_dir}')
         # Update the temporary directory path to the first extracted directory
         temp_dir = os.path.join(temp_dir, files_in_temp_dir[0])
         # List the files in the updated temporary directory
         files_in_temp_dir = os.listdir(temp_dir)
-        print(f'Files in temporary directory: {files_in_temp_dir}')
         # Return the temporary directory path
         return temp_dir
 
@@ -130,15 +128,9 @@ def find_classes_and_interfaces(java_sources):
 # Example usage
 zip_file_path = 'D:\doc\spring\pythonJavaSpringParser\Spring-Boot-Sample-Project.zip'
 extracted_dir = extract_zip(zip_file_path)      # Extract the contents of the zip file
-print(extracted_dir)
 java_source = load_files(extracted_dir)  
 # Load all Java source files
 classes_interfaces = find_classes_and_interfaces(java_source)   # Find all controllers that extend RestController
-# print(classes_interfaces['controllers'])  # Print the list of controllers found
-# print(classes_interfaces['entities'])     # Print the list of entities found                            
-# print(classes_interfaces['repositories']) # Print the list of repositories found
-# print(classes_interfaces['services'])
-shutil.rmtree(extracted_dir) # delete the temp directory
 
 for i in classes_interfaces:
     for j in classes_interfaces[i]:
