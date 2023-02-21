@@ -4,6 +4,45 @@ import tempfile            # Required for creating temporary directories
 import zipfile             # Required for working with zip files
 import javalang            # Required for parsing Java source code
 
+
+def __get_start_end_for_node(node_to_find,tree):
+    start = None
+    end = None
+    for path, node in tree:
+        if start is not None and node_to_find not in path:
+            end = node.position
+            return start, end
+        if start is None and node == node_to_find:
+            start = node.position
+    return start, end
+
+
+def __get_string(start, end,data):
+    if start is None:
+        return ""
+
+    # positions are all offset by 1. e.g. first line -> lines[0], start.line = 1
+    end_pos = None
+
+    if end is not None:
+        end_pos = end.line - 1
+
+    lines = data.splitlines(True)
+    string = "".join(lines[start.line:end_pos])
+    string = lines[start.line - 1] + string
+
+    # When the method is the last one, it will contain a additional brace
+    if end is None:
+        left = string.count("{")
+        right = string.count("}")
+        if right - left == 1:
+            p = string.rfind("}")
+            string = string[:p]
+
+    return string
+
+
+
 # Extract the contents of the zip file to a temporary directory
 def extract_zip(zip_file_path):
     with zipfile.ZipFile(zip_file_path, 'r') as zip_file:
@@ -36,10 +75,11 @@ def load_files(dir_path):
     return files
 
 # Find all classes that extend the RestController class
-def find_rest_controllers(java_sources):
-    controllers = set()
-    entities=set()
-    repositories=set()
+def find_classes_and_interfaces(java_sources):
+    controllers = {}
+    entities={}
+    repositories={}
+    services={}
     for i in java_sources:
         # Parse the Java source code
         tree = javalang.parse.parse(i)
@@ -47,38 +87,53 @@ def find_rest_controllers(java_sources):
             if isinstance(node, javalang.tree.InterfaceDeclaration):
                 # Check if the interface extends JpaRepository
                 if node.extends is not None:
-                    for i in node.extends:
-                        if 'JpaRepository' in i.name:
-                            repositories.add(node.name)
+                    for j in node.extends:
+                        if 'JpaRepository' in j.name:
+                            start,end=__get_start_end_for_node(node,tree)
+                            repositories[node.name]=__get_string(start,end,i)
                 # Check if the interface is annotated with @RestController, @Controller or @RequestMapping
                 for annotation in node.annotations:
                     if isinstance(annotation, javalang.tree.Annotation):
                         if annotation.name == 'RestController' or annotation.name == 'Controller' or annotation.name == 'RequestMapping':
-                            controllers.add(node.name)
+                            start,end=__get_start_end_for_node(node,tree)
+                            controllers[node.name]=__get_string(start,end,i)
                         # Check if the interface is annotated with @Entity
                         if annotation.name == 'Entity':
-                            entities.add(node.name)
+                            start,end=__get_start_end_for_node(node,tree)
+                            entities[node.name]=__get_string(start,end,i)
+                        
+                        # Check if the interface is annotated with @Service
+                        if annotation.name == 'Service':
+                            start,end=__get_start_end_for_node(node,tree)
+                            services[node.name]=__get_string(start,end,i)
                 
             if isinstance(node, javalang.tree.ClassDeclaration):
                 # Check if the class is annotated with @RestController, @Controller or @RequestMapping
                 for annotation in node.annotations:
                     if isinstance(annotation, javalang.tree.Annotation):
                         if annotation.name == 'RestController' or annotation.name == 'Controller' or annotation.name == 'RequestMapping':
-                            controllers.add(node.name)
+                            start,end=__get_start_end_for_node(node,tree)
+                            controllers[node.name]=__get_string(start,end,i)
                         # Check if the class is annotated with @Entity
                         if annotation.name == 'Entity':
-                            entities.add(node.name)
+                            start,end=__get_start_end_for_node(node,tree)
+                            entities[node.name]=__get_string(start,end,i)
+                        
+                        # Check if the interface is annotated with @Service
+                        if annotation.name == 'Service':
+                            start,end=__get_start_end_for_node(node,tree)
+                            services[node.name]=__get_string(start,end,i)
                     
     # Return a dictionary with the lists of controllers, entities and repositories found
-    return {"controllers": controllers, "entities": entities, "repositories": repositories}
+    return {"controllers": controllers, "entities": entities, "repositories": repositories, "services":services}
 
 # Example usage
-zip_file_path = 'Spring-Boot-Sample-Project.zip'
+zip_file_path = 'D:\doc\spring\pythonJavaSpringParser\Spring-Boot-Sample-Project.zip'
 extracted_dir = extract_zip(zip_file_path)      # Extract the contents of the zip file
 print(extracted_dir)
 java_source = load_files(extracted_dir)  
 # Load all Java source files
-rest_controllers = find_rest_controllers(java_source)   # Find all controllers that extend RestController
+rest_controllers = find_classes_and_interfaces(java_source)   # Find all controllers that extend RestController
 print(rest_controllers['controllers'])  # Print the list of controllers found
 print(rest_controllers['entities'])     # Print the list of entities found                            
 print(rest_controllers['repositories']) # Print the list of repositories found
