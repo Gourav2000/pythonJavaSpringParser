@@ -133,8 +133,15 @@ extracted_dir = extract_zip(zip_file_path)      # Extract the contents of the zi
 print(extracted_dir)
 java_source = load_files(extracted_dir)  
 # Load all Java source files
-rest_controllers = find_classes_and_interfaces(java_source)   # Find all controllers that extend RestController
-print(rest_controllers['controllers'])  # Print the list of controllers found
-print(rest_controllers['entities'])     # Print the list of entities found                            
-print(rest_controllers['repositories']) # Print the list of repositories found
+classes_interfaces = find_classes_and_interfaces(java_source)   # Find all controllers that extend RestController
+# print(classes_interfaces['controllers'])  # Print the list of controllers found
+# print(classes_interfaces['entities'])     # Print the list of entities found                            
+# print(classes_interfaces['repositories']) # Print the list of repositories found
+# print(classes_interfaces['services'])
 shutil.rmtree(extracted_dir) # delete the temp directory
+
+for i in classes_interfaces:
+    for j in classes_interfaces[i]:
+        print(j,end="------------------------------------------------------------->\n")
+        print(classes_interfaces[i][j])
+        print("________________________________________________________________________")
