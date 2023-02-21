@@ -133,7 +133,12 @@ java_source = load_files(extracted_dir)
 classes_interfaces = find_classes_and_interfaces(java_source)   # Find all controllers that extend RestController
 
 for i in classes_interfaces:
+    print("#######################")
+    print(i)
+    print("#######################")
     for j in classes_interfaces[i]:
+        print("*******************************************")
         print(j,end="------------------------------------------------------------->\n")
+        print("*******************************************")
         print(classes_interfaces[i][j])
         print("________________________________________________________________________")
