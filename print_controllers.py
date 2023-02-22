@@ -125,20 +125,26 @@ def find_classes_and_interfaces(java_sources):
     # Return a dictionary with the lists of controllers, entities and repositories found
     return {"controllers": controllers, "entities": entities, "repositories": repositories, "services":services}
 
+
+def zip_to_result(zip_file_path):
+    extracted_dir = extract_zip(zip_file_path)      # Extract the contents of the zip file
+    java_source = load_files(extracted_dir)  
+    # Load all Java source files
+    classes_interfaces = find_classes_and_interfaces(java_source)   # Find all controllers that extend RestController
+    return classes_interfaces
+
+
 # Example usage
 zip_file_path = 'D:\doc\spring\pythonJavaSpringParser\Spring-Boot-Sample-Project.zip'
-extracted_dir = extract_zip(zip_file_path)      # Extract the contents of the zip file
-java_source = load_files(extracted_dir)  
-# Load all Java source files
-classes_interfaces = find_classes_and_interfaces(java_source)   # Find all controllers that extend RestController
+print(zip_to_result(zip_file_path))
 
-for i in classes_interfaces:
-    print("#######################")
-    print(i)
-    print("#######################")
-    for j in classes_interfaces[i]:
-        print("*******************************************")
-        print(j,end="------------------------------------------------------------->\n")
-        print("*******************************************")
-        print(classes_interfaces[i][j])
-        print("________________________________________________________________________")
+# for i in classes_interfaces:
+#     print("#######################")
+#     print(i)
+#     print("#######################")
+#     for j in classes_interfaces[i]:
+#         print("*******************************************")
+#         print(j,end="------------------------------------------------------------->\n")
+#         print("*******************************************")
+#         print(classes_interfaces[i][j])
+#         print("________________________________________________________________________")
