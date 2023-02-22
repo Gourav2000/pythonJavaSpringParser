@@ -1,3 +1,5 @@
+from print_controllers import zip_to_result
+import os
 import openai
 openai.api_key = ''
 response = openai.Completion.create(
@@ -9,5 +11,7 @@ response = openai.Completion.create(
   frequency_penalty=0.0,
   presence_penalty=0.0
 )
-
-print(response.choices[0].text)
+if __name__=='__main__':
+    ok=zip_to_result(os.path.join(os.path.dirname(__file__),'Spring-Boot-Sample-Project.zip'))
+    print(ok)
+    print(response.choices[0].text)
