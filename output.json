@@ -1,0 +1,15 @@
+{
+    "controllers": {
+        "ExampleController": "\nfrom flask import Flask, request, jsonify\nfrom flask_restful import Resource, Api\n\napp = Flask(__name__)\napi = Api(app)\n\n@app.route('/getexample', methods=['GET'])\ndef get_all_examples():\n    return jsonify(exampleService.getAllExamples())\n\n@app.route('/postexample', methods=['POST'])\ndef save_example():\n    example = request.get_json()\n    return jsonify(exampleService.saveExample(example))"
+    },
+    "entities": {
+        "Example": "\nclass Example:\n    def __init__(self, id, name, phoneNumber, gender):\n        self.id = id\n        self.name = name\n        self.phoneNumber = phoneNumber\n        self.gender = gender"
+    },
+    "repositories": {
+        "ExampleRepository": "\nfrom sqlalchemy.ext.declarative import declarative_base\nfrom sqlalchemy import Column, Integer, String\nfrom sqlalchemy.orm import relationship, sessionmaker\nfrom sqlalchemy.ext.automap import automap_base\nfrom sqlalchemy.orm import Session\nfrom sqlalchemy import create_engine\n\nBase = declarative_base()\n\nclass ExampleRepository(Base):\n    __tablename__ = 'example'\n    id = Column(Integer, primary_key=True)\n    name = Column(String)\n\nengine = create_engine('sqlite:///example.db')\nBase.metadata.create_all(engine)\n\nSession = sessionmaker(bind=engine)\nsession = Session()"
+    },
+    "services": {
+        "ExampleService": "\nclass ExampleService:\n    def getAllExamples(self):\n        # code to get all examples\n        pass\n\n    def saveExample(self, example):\n        # code to save example\n        pass",
+        "ExampleServiceImpl": "\nclass ExampleServiceImpl:\n    def __init__(self, exampleRepository):\n        self.exampleRepository = exampleRepository\n\n    def getAllExamples(self):\n        return self.exampleRepository.findAll()\n\n    def saveExample(self, example):\n        return self.exampleRepository.save(example)"
+    }
+}

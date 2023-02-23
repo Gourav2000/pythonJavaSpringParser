@@ -1,0 +1,26 @@
+{
+    "controllers": {
+        "TransactionController": "\nfrom flask import Flask, request, jsonify\nfrom flask_restful import Resource, Api\n\napp = Flask(__name__)\napi = Api(app)\n\nclass TransactionController(Resource):\n\tdef __init__(self, transactionService, userService, wealthService):\n\t\t",
+        "TransferController": "\n\nfrom flask import Flask, request, jsonify\nfrom flask_restful import Resource, Api\n\napp = Flask(__name__)\napi = Api(app)\n\nclass TransferController(Resource):\n\tdef __init__(self, userService, wealthService, transferService):\n\t",
+        "UserController": "\nfrom flask import Flask, request, jsonify\nfrom flask_restful import Resource, Api\n\napp = Flask(__name__)\napi = Api(app)\n\nclass UserController(Resource):\n\tdef __init__(self, userService, wealthService):\n\t\tself.user",
+        "WealthController": "\nfrom flask import Flask, request, jsonify\nfrom flask_restful import Resource, Api\n\napp = Flask(__name__)\napi = Api(app)\n\nclass WealthController(Resource):\n    def __init__(self, wealthService, userService):\n        self.wealthService"
+    },
+    "entities": {
+        "Transaction": "\nfrom flask import Flask\nfrom flask_sqlalchemy import SQLAlchemy\nfrom datetime import datetime\n\napp = Flask(__name__)\ndb = SQLAlchemy(app)\n\nclass Transaction(db.Model):\n\tid = db.Column(db.Integer, primary_key=True",
+        "Transfer": "\nfrom flask import Flask, request\nfrom flask_sqlalchemy import SQLAlchemy\nfrom datetime import datetime\n\napp = Flask(__name__)\ndb = SQLAlchemy(app)\n\nclass Transfer(db.Model):\n\tid = db.Column(db.Integer, primary_key",
+        "User": "\nfrom flask import Flask\nfrom flask_sqlalchemy import SQLAlchemy\n\napp = Flask(__name__)\napp.config[\"SQLALCHEMY_DATABASE_URI\"] = \"sqlite: ////tmp/test.db\"\ndb = SQLAlchemy(app)\n\nclass",
+        "Wealth": "\nfrom flask import Flask\n\napp = Flask(__name__)\n\nclass Wealth:\n    def __init__(self, userId, wealthMap):\n        self.userId = userId\n        self.wealthMap = wealthMap\n    \n    @app.route(\"/wealth/<userId"
+    },
+    "repositories": {
+        "TransactionRepository": "\nfrom flask_sqlalchemy import SQLAlchemy\n\ndb = SQLAlchemy()\n\nclass Transaction(db.Model):\n\t__tablename__ = \"transaction\"\n\tid = db.Column(db.Integer, primary_key=True)\n\tuserId = db.Column(db",
+        "TransferRepository": "\nfrom flask_sqlalchemy import SQLAlchemy\n\ndb = SQLAlchemy()\n\nclass Transfer(db.Model):\n\t__tablename__ = \"transfers\"\n\tid = db.Column(db.Integer, primary_key=True)\n\tfromUserId = db.Column",
+        "UserRepository": "\nfrom flask_sqlalchemy import SQLAlchemy\n\ndb = SQLAlchemy()\n\nclass User(db.Model):\n    __tablename__ = \"users\"\n    id = db.Column(db.Integer, primary_key=True)\n    username = db.Column(db.String",
+        "WealthRepository": "\nfrom flask_sqlalchemy import SQLAlchemy\n\nclass WealthRepository(SQLAlchemy):\n    __tablename__ = \"wealth\"\n    id = db.Column(db.Integer, primary_key=True)\n\n    def __init__(self, Wealth, Long):\n        self."
+    },
+    "services": {
+        "TransactionService": "\nfrom flask import Flask, request\nfrom flask_sqlalchemy import SQLAlchemy\n\napp = Flask(__name__)\ndb = SQLAlchemy(app)\n\nclass Transaction(db.Model):\n\tid = db.Column(db.Integer, primary_key=True)\n\tuser_",
+        "TransferService": "\nfrom flask import Flask\nfrom flask_sqlalchemy import SQLAlchemy\n\napp = Flask(__name__)\ndb = SQLAlchemy(app)\n\nclass TransferRepository(db.Model):\n\t__tablename__ = \"transfers\"\n\tid = db.Column(db",
+        "UserService": "\nfrom flask import Flask, request\nfrom flask_sqlalchemy import SQLAlchemy\nfrom werkzeug.security import generate_password_hash, check_password_hash\n\napp = Flask(__name__)\napp.config[\"SQLALCHEMY_DATABASE_URI\"] = \"\"",
+        "WealthService": "\nfrom flask import Flask, request, jsonify\nfrom flask_restful import Resource, Api\nfrom flask_sqlalchemy import SQLAlchemy\nfrom sqlalchemy import exc\nimport os\n\napp = Flask(__name__)\napi = Api(app)\n\nclass WealthService(Resource):"
+    }
+}

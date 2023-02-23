@@ -1,0 +1,93 @@
+#######################
+controllers
+#######################
+*******************************************
+ExampleController------------------------------------------------------------->
+*******************************************
+
+from flask import Flask, request, jsonify
+from flask_restful import Resource, Api
+
+app = Flask(__name__)
+api = Api(app)
+
+@app.route('/getexample', methods=['GET'])
+def get_all_examples():
+    return jsonify(exampleService.getAllExamples())
+
+@app.route('/postexample', methods=['POST'])
+def save_example():
+    example = request.get_json()
+    return jsonify(exampleService.saveExample(example))
+________________________________________________________________________
+#######################
+entities
+#######################
+*******************************************
+Example------------------------------------------------------------->
+*******************************************
+
+class Example:
+    def __init__(self, id, name, phoneNumber, gender):
+        self.id = id
+        self.name = name
+        self.phoneNumber = phoneNumber
+        self.gender = gender
+________________________________________________________________________
+#######################
+repositories
+#######################
+*******************************************
+ExampleRepository------------------------------------------------------------->
+*******************************************
+
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.orm import Session
+from sqlalchemy import create_engine
+
+Base = declarative_base()
+
+class ExampleRepository(Base):
+    __tablename__ = 'example'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+
+engine = create_engine('sqlite:///example.db')
+Base.metadata.create_all(engine)
+
+Session = sessionmaker(bind=engine)
+session = Session()
+________________________________________________________________________
+#######################
+services
+#######################
+*******************************************
+ExampleService------------------------------------------------------------->
+*******************************************
+
+class ExampleService:
+    def getAllExamples(self):
+        # code to get all examples
+        pass
+
+    def saveExample(self, example):
+        # code to save example
+        pass
+________________________________________________________________________
+*******************************************
+ExampleServiceImpl------------------------------------------------------------->
+*******************************************
+
+class ExampleServiceImpl:
+    def __init__(self, exampleRepository):
+        self.exampleRepository = exampleRepository
+
+    def getAllExamples(self):
+        return self.exampleRepository.findAll()
+
+    def saveExample(self, example):
+        return self.exampleRepository.save(example)
+________________________________________________________________________
