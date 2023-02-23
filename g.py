@@ -4,7 +4,7 @@ import json
 import openai
 
 def generateResponse(classes_interfaces):
-  openai.api_key = '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'
+  openai.api_key = ''
   # response = openai.Completion.create(
   #   model="text-davinci-003",
   #   prompt="#convert this java code to flask python: \n@RestController \npublic class HelloController {\n@RequestMapping('\/hello'\)\npublic String hello(){ \nreturn '\Hello World'\;\n}\n}",
