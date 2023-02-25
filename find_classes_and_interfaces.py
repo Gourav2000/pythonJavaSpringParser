@@ -135,8 +135,9 @@ def zip_to_result(zip_file_path):
 
 if __name__=='__main__':
     # Example usage
-    zip_file_path = 'D:\doc\spring\pythonJavaSpringParser\Spring-Boot-Sample-Project.zip'
+    zip_file_path = 'Sample.zip'
     classes_interfaces=(zip_to_result(zip_file_path))
+    print(classes_interfaces)
 
 # for i in classes_interfaces:
 #     print("#######################")
